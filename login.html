@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cyber Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Courier New', Courier, monospace;
+      overflow: hidden;
+      background: black;
+      color: #00ff00;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .login-box {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 40px;
+      border: 2px solid #00ff00;
+      box-shadow: 0 0 15px #00ff00;
+      border-radius: 8px;
+    }
+
+    .login-box h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
+    }
+
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: black;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      outline: none;
+      font-size: 16px;
+      transition: 0.3s;
+    }
+
+    .login-box input:focus {
+      box-shadow: 0 0 10px #00ff00;
+    }
+
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background: #00ff00;
+      color: black;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .login-box button:hover {
+      background: #00cc00;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrixCanvas"></canvas>
+
+  <div class="login-box">
+    <h2>Cyber Login</h2>
+    <input type="text" placeholder="Username" />
+    <input type="password" placeholder="Password" />
+    <button>Login</button>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Fullscreen canvas
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Characters and setup
+    const chars = 'アァイィウヴエカキクケコサシスセソタチツテトナニヌネノハヒフホマミムメモヤユヨラリルレロワンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+    const drops = [];
+
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * canvas.height;
+    }
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#00ff00';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = chars.charAt(Math.floor(Math.random() * chars.length));
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        // Create slant effect
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(-0.3); // slant angle in radians
+        ctx.fillText(text, 0, 0);
+        ctx.restore();
+
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        } else {
+          drops[i]++;
+        }
+      }
+    }
+
+    setInterval(draw, 35);
+
+    // Resize canvas when window changes
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+</body>
+</html>
